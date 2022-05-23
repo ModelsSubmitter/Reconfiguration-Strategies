@@ -1,0 +1,92 @@
+### changing toolsets
+[ServiceStation1&&RC1 >> ServiceStation1&&PC1] setup >= 100
+[ServiceStation1&&PC1 >> ServiceStation1&&RC1] setup >= 100
+
+[ServiceStation2&&RC2 >> ServiceStation2&&PC2] setup >= 100
+[ServiceStation2&&PC2 >> ServiceStation2&&RC2] setup >= 100
+
+### changing location of robot
+[ServiceStation1 >> Right1] setup >= 100
+[ServiceStation1 >> Left1] setup >= 100
+[Left1 >> Right1] setup >= 100
+[Left1 >> ServiceStation1] setup >= 100
+[Right1 >> Left1] setup >= 100
+[Right1 >> ServiceStation1] setup >= 100
+
+[ServiceStation2 >> Right2] setup >= 100
+[ServiceStation2 >> Left2] setup >= 100
+[Left2 >> Right2] setup >= 100
+[Left2 >> ServiceStation2] setup >= 100
+[Right2 >> Left2] setup >= 100
+[Right2 >> ServiceStation2] setup >= 100
+
+### toolset can only be changed at service station
+[!ServiceStation1&&!RC1 >> !ServiceStation1&&RC1] false
+[!ServiceStation1&&!RC1 >> ServiceStation1&&RC1] false
+[!ServiceStation1&&RC1 >> !ServiceStation1&&!RC1] false
+[ServiceStation1&&RC1 >> !ServiceStation1&&!RC1] false
+[!ServiceStation1&&!PC1 >> ServiceStation1&&PC1] false
+[!ServiceStation1&&!PC1 >> !ServiceStation1&&PC1] false
+[ServiceStation1&&PC1 >> !ServiceStation1&&!PC1] false
+[!ServiceStation1&&PC1 >> !ServiceStation1&&!PC1] false
+
+[!ServiceStation2&&!RC2 >> !ServiceStation2&&RC2] false
+[!ServiceStation2&&!RC2 >> ServiceStation2&&RC2] false
+[!ServiceStation2&&RC2 >> !ServiceStation2&&!RC2] false
+[ServiceStation2&&RC2 >> !ServiceStation2&&!RC2] false
+[!ServiceStation2&&!PC2 >> ServiceStation2&&PC2] false
+[!ServiceStation2&&!PC2 >> !ServiceStation2&&PC2] false
+[ServiceStation2&&PC2 >> !ServiceStation2&&!PC2] false
+[!ServiceStation2&&PC2 >> !ServiceStation2&&!PC2] false
+
+### task execution states
+[Idle1 >> Exec1||Fail1] false
+[Wait1 >> Idle1] false
+[Fail1 >> Idle1||Wait1||Exec1] false
+[Exec1 >> Wait1||Fail1] false
+[Fail1 >> Idle1] false
+
+[Idle2 >> Exec2||Fail2] false
+[Wait2 >> Idle2] false
+[Fail2 >> Idle2||Wait2||Exec2] false
+[Exec2 >> Wait2||Fail2] false
+[Fail2 >> Idle2] false
+
+### task occurence is triggered according to normal distribution
+[Idle1 >> !Idle1] normal(30.0,5.0)
+[Idle2 >> !Idle2] normal(30.0,5.0)
+
+### deadline of task
+[RivR1&&Idle1 >> RivR1&&(Wait1||Exec1)] reside <= 200
+[RivR1&&(Wait1||Exec1) >> RivR1&&Fail1] setup >= 200
+
+[RivL2&&Idle2 >> RivL2&&(Wait2||Exec2)] reside <= 200
+[RivL2&&(Wait2||Exec2) >> RivL2&&Fail2] setup >= 200
+
+### execution time of task
+[Wait1 >> Exec1] reside <= 15
+[Wait2 >> Exec2] reside <= 15
+
+### tasks execution is non-preemptive (i.e. task must be finished before robot can leave workstation)
+[Exec1&&RivR1&&Right1&&RC1 >> !(Right1&&RC1)] false
+[Exec1&&RivR1&&Right2&&RC2 >> !(Right2&&RC2)] false
+
+[Exec2&&RivL2&&Left1&&RC1 >> !(Left1&&RC1)] false
+[Exec2&&RivL2&&Left2&&RC2 >> !(Left2&&RC2)] false
+
+### task is executed as soon as robot arrives at workstation
+[!(RC1&&Right1&&RivR1&&Wait1) >> RC1&&Right1&&RivR1&&Wait1] reside <= 0
+[!(RC2&&Right2&&RivR1&&Wait1) >> RC2&&Right2&&RivR1&&Wait1] reside <= 0
+[Wait1&&RivR1&&!((Right1&&RC1)||(Right2&&RC2)) >> Exec1] false
+
+[!(RC1&&Left1&&RivL2&&Wait2) >> RC1&&Left1&&RivL2&&Wait2] reside <= 0
+[!(RC2&&Left2&&RivL2&&Wait2) >> RC2&&Left2&&RivL2&&Wait2] reside <= 0
+[Wait2&&RivL2&&!((Left1&&RC1)||(Left2&&RC2)) >> Exec2] false
+
+### additional forbidden reconfigurations
+[RivR1 >> RivL1] false
+[RivL1 >> RivR1] false
+[RivR2 >> RivL2] false
+[RivL2 >> RivR2] false
+[!RivL1 >> RivL1] false
+[!RivR2 >> RivR2] false

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<featureModel>
+	<properties>
+		<graphics key="legendautolayout" value="true"/>
+		<graphics key="showshortnames" value="false"/>
+		<graphics key="layout" value="horizontal"/>
+		<graphics key="showcollapsedconstraints" value="true"/>
+		<graphics key="legendhidden" value="false"/>
+		<graphics key="layoutalgorithm" value="1"/>
+	</properties>
+	<struct>
+		<and abstract="true" mandatory="true" name="RobotSupportSystem">
+			<and abstract="true" mandatory="true" name="System">
+				<and abstract="true" mandatory="true" name="Robot1">
+					<graphics key="collapsed" value="false"/>
+					<alt abstract="true" mandatory="true" name="Location1">
+						<graphics key="collapsed" value="false"/>
+						<feature name="ServiceStation1"/>
+						<feature name="Left1"/>
+						<feature name="Right1"/>
+					</alt>
+					<alt abstract="true" mandatory="true" name="Tool1">
+						<feature name="RC1"/>
+						<feature name="PC1"/>
+					</alt>
+				</and>
+				<and abstract="true" mandatory="true" name="Robot2">
+					<graphics key="collapsed" value="false"/>
+					<alt abstract="true" mandatory="true" name="Location2">
+						<graphics key="collapsed" value="false"/>
+						<feature name="ServiceStation2"/>
+						<feature name="Left2"/>
+						<feature name="Right2"/>
+					</alt>
+					<alt abstract="true" mandatory="true" name="Tool2">
+						<feature name="RC2"/>
+						<feature name="PC2"/>
+					</alt>
+				</and>
+			</and>
+			<and abstract="true" mandatory="true" name="Context">
+				<and abstract="true" mandatory="true" name="Task1">
+					<alt abstract="true" mandatory="true" name="Type1">
+						<feature name="None1"/>
+						<feature name="RivR1"/>
+						<feature name="RivL1"/>
+					</alt>
+					<alt abstract="true" mandatory="true" name="Status1">
+						<graphics key="collapsed" value="false"/>
+						<feature name="Idle1"/>
+						<feature name="Wait1"/>
+						<feature name="Exec1"/>
+						<feature name="Fail1"/>
+					</alt>
+				</and>
+				<and abstract="true" mandatory="true" name="Task2">
+					<alt abstract="true" mandatory="true" name="Type2">
+						<feature name="None2"/>
+						<feature name="RivR2"/>
+						<feature name="RivL2"/>
+					</alt>
+					<alt abstract="true" mandatory="true" name="Status2">
+						<graphics key="collapsed" value="false"/>
+						<feature name="Idle2"/>
+						<feature name="Wait2"/>
+						<feature name="Exec2"/>
+						<feature name="Fail2"/>
+					</alt>
+				</and>
+			</and>
+		</and>
+	</struct>
+	<constraints>
+		<rule>
+			<imp>
+				<var>None1</var>
+				<var>Idle1</var>
+			</imp>
+		</rule>
+		<rule>
+			<imp>
+				<var>Idle1</var>
+				<var>None1</var>
+			</imp>
+		</rule>
+		<rule>
+			<imp>
+				<conj>
+					<var>Exec1</var>
+					<var>RivR1</var>
+				</conj>
+				<conj>
+					<var>RC1</var>
+					<var>Right1</var>
+				</conj>
+			</imp>
+		</rule>
+		<rule>
+			<imp>
+				<conj>
+					<var>Exec1</var>
+					<var>RivL1</var>
+				</conj>
+				<conj>
+					<var>RC1</var>
+					<var>Left1</var>
+				</conj>
+			</imp>
+		</rule>
+		<rule>
+			<imp>
+				<var>None2</var>
+				<var>Idle2</var>
+			</imp>
+		</rule>
+		<rule>
+			<imp>
+				<var>Idle2</var>
+				<var>None2</var>
+			</imp>
+		</rule>
+		<rule>
+			<imp>
+				<conj>
+					<var>Exec2</var>
+					<var>RivR2</var>
+				</conj>
+				<conj>
+					<var>RC2</var>
+					<var>Right2</var>
+				</conj>
+			</imp>
+		</rule>
+		<rule>
+			<imp>
+				<conj>
+					<var>Exec2</var>
+					<var>RivL2</var>
+				</conj>
+				<conj>
+					<var>RC2</var>
+					<var>Left2</var>
+				</conj>
+			</imp>
+		</rule>
+		<rule>
+			<imp>
+				<var>RivR1</var>
+				<not>
+					<var>RivR2</var>
+				</not>
+			</imp>
+		</rule>
+		<rule>
+			<imp>
+				<var>RivL1</var>
+				<not>
+					<var>RivL2</var>
+				</not>
+			</imp>
+		</rule>
+	</constraints>
+</featureModel>
